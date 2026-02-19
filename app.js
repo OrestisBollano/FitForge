@@ -441,6 +441,11 @@ const app = (() => {
           showWorkoutActive(true);
           renderWorkoutExercises();
         }
+
+        // Restore the last viewed page
+        if (data.currentView) {
+          navigate(data.currentView);
+        }
       }
 
       // Load default PPL templates if no templates exist
@@ -460,7 +465,8 @@ const app = (() => {
         templates: state.templates,
         unit: state.unit,
         activeWorkout: state.activeWorkout,
-        workoutStartTime: state.workoutStartTime
+        workoutStartTime: state.workoutStartTime,
+        currentView: state.currentView
       }));
     } catch (e) {
       console.error('Failed to save state:', e);
@@ -479,6 +485,7 @@ const app = (() => {
     if (view === 'dashboard') renderDashboard();
     if (view === 'history') renderHistory();
     if (view === 'progress') renderProgress();
+    saveState();
   }
 
   // ─── Greeting ────────────────────────────
