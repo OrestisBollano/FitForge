@@ -134,67 +134,211 @@ const app = (() => {
     {
       name: 'Push (Day 1)',
       exercises: [
-        { id: 'bench_press', name: 'Bench Press', emoji: '🏋️', muscle: 'Chest', setsCount: 4 },
-        { id: 'ohp', name: 'Overhead Press', emoji: '🏋️', muscle: 'Shoulders', setsCount: 3 },
-        { id: 'incline_db_press', name: 'Incline Dumbbell Press', emoji: '💪', muscle: 'Chest', setsCount: 3 },
-        { id: 'lateral_raise', name: 'Lateral Raise', emoji: '🦅', muscle: 'Shoulders', setsCount: 4 },
-        { id: 'tricep_pushdown', name: 'Tricep Pushdown', emoji: '🔽', muscle: 'Arms', setsCount: 3 },
-        { id: 'overhead_extension', name: 'Overhead Tricep Extension', emoji: '💪', muscle: 'Arms', setsCount: 3 }
+        {
+          id: 'bench_press', name: 'Bench Press', emoji: '🏋️', muscle: 'Chest', sets: [
+            { weight: '50', reps: '10' }, { weight: '50', reps: '10' }, { weight: '60', reps: '8' }, { weight: '60', reps: '8' }
+          ]
+        },
+        {
+          id: 'ohp', name: 'Overhead Press', emoji: '🏋️', muscle: 'Shoulders', sets: [
+            { weight: '20', reps: '10' }, { weight: '20', reps: '10' }, { weight: '20', reps: '10' }
+          ]
+        },
+        {
+          id: 'incline_db_press', name: 'Incline Dumbbell Press', emoji: '💪', muscle: 'Chest', sets: [
+            { weight: '26', reps: '10' }, { weight: '26', reps: '10' }, { weight: '26', reps: '10' }
+          ]
+        },
+        {
+          id: 'lateral_raise', name: 'Lateral Raise', emoji: '🦅', muscle: 'Shoulders', sets: [
+            { weight: '12', reps: '12' }, { weight: '12', reps: '12' }, { weight: '12', reps: '12' }, { weight: '12', reps: '12' }
+          ]
+        },
+        {
+          id: 'tricep_pushdown', name: 'Tricep Pushdown', emoji: '🔽', muscle: 'Arms', sets: [
+            { weight: '18', reps: '12' }, { weight: '18', reps: '12' }, { weight: '18', reps: '12' }
+          ]
+        },
+        {
+          id: 'overhead_extension', name: 'Overhead Tricep Extension', emoji: '💪', muscle: 'Arms', sets: [
+            { weight: '18', reps: '10' }, { weight: '18', reps: '10' }, { weight: '18', reps: '10' }
+          ]
+        }
       ]
     },
     {
       name: 'Pull (Day 2)',
       exercises: [
-        { id: 'pull_ups', name: 'Pull Ups', emoji: '🤸', muscle: 'Back', setsCount: 4 },
-        { id: 'barbell_row', name: 'Barbell Row', emoji: '🚣', muscle: 'Back', setsCount: 4 },
-        { id: 'seated_row', name: 'Seated Cable Row', emoji: '🚣', muscle: 'Back', setsCount: 3 },
-        { id: 'face_pull', name: 'Face Pull', emoji: '🔄', muscle: 'Shoulders', setsCount: 4 },
-        { id: 'barbell_curl', name: 'Barbell Curl', emoji: '💪', muscle: 'Arms', setsCount: 3 },
-        { id: 'hammer_curl', name: 'Hammer Curl', emoji: '🔨', muscle: 'Arms', setsCount: 3 }
+        {
+          id: 'pull_ups', name: 'Pull Ups', emoji: '🤸', muscle: 'Back', sets: [
+            { weight: '66', reps: '8' }, { weight: '66', reps: '8' }, { weight: '66', reps: '8' }, { weight: '66', reps: '8' }
+          ]
+        },
+        {
+          id: 'barbell_row', name: 'Barbell Row', emoji: '🚣', muscle: 'Back', sets: [
+            { weight: '60', reps: '10' }, { weight: '60', reps: '10' }, { weight: '60', reps: '10' }, { weight: '70', reps: '8' }
+          ]
+        },
+        {
+          id: 'seated_row', name: 'Seated Cable Row', emoji: '🚣', muscle: 'Back', sets: [
+            { weight: '66', reps: '10' }, { weight: '66', reps: '10' }, { weight: '66', reps: '10' }
+          ]
+        },
+        {
+          id: 'face_pull', name: 'Face Pull', emoji: '🔄', muscle: 'Shoulders', sets: [
+            { weight: '18', reps: '15' }, { weight: '18', reps: '15' }, { weight: '18', reps: '15' }, { weight: '18', reps: '15' }
+          ]
+        },
+        {
+          id: 'barbell_curl', name: 'Barbell Curl', emoji: '💪', muscle: 'Arms', sets: [
+            { weight: '10', reps: '10' }, { weight: '10', reps: '10' }, { weight: '10', reps: '10' }
+          ]
+        },
+        {
+          id: 'hammer_curl', name: 'Hammer Curl', emoji: '🔨', muscle: 'Arms', sets: [
+            { weight: '14', reps: '10' }, { weight: '14', reps: '10' }, { weight: '14', reps: '10' }
+          ]
+        }
       ]
     },
     {
       name: 'Legs (Day 3)',
       exercises: [
-        { id: 'squat', name: 'Squat', emoji: '🏋️', muscle: 'Legs', setsCount: 4 },
-        { id: 'romanian_dl', name: 'Romanian Deadlift', emoji: '🏋️', muscle: 'Legs', setsCount: 4 },
-        { id: 'bulgarian_split', name: 'Bulgarian Split Squat', emoji: '🚶', muscle: 'Legs', setsCount: 3 },
-        { id: 'leg_extension', name: 'Leg Extension', emoji: '🦵', muscle: 'Legs', setsCount: 3 },
-        { id: 'leg_curl', name: 'Lying Leg Curl', emoji: '🦵', muscle: 'Legs', setsCount: 3 },
-        { id: 'calf_raise', name: 'Standing Calf Raise', emoji: '🦶', muscle: 'Legs', setsCount: 4 }
+        {
+          id: 'squat', name: 'Squat', emoji: '🏋️', muscle: 'Legs', sets: [
+            { weight: '50', reps: '8' }, { weight: '50', reps: '8' }, { weight: '50', reps: '8' }, { weight: '50', reps: '8' }
+          ]
+        },
+        {
+          id: 'romanian_dl', name: 'Romanian Deadlift', emoji: '🏋️', muscle: 'Legs', sets: [
+            { weight: '50', reps: '10' }, { weight: '50', reps: '10' }, { weight: '50', reps: '10' }, { weight: '50', reps: '10' }
+          ]
+        },
+        {
+          id: 'bulgarian_split', name: 'Bulgarian Split Squat', emoji: '🚶', muscle: 'Legs', sets: [
+            { weight: '0', reps: '10' }, { weight: '0', reps: '10' }, { weight: '0', reps: '10' }
+          ]
+        },
+        {
+          id: 'leg_extension', name: 'Leg Extension', emoji: '🦵', muscle: 'Legs', sets: [
+            { weight: '40', reps: '15' }, { weight: '40', reps: '15' }, { weight: '40', reps: '15' }
+          ]
+        },
+        {
+          id: 'leg_curl', name: 'Lying Leg Curl', emoji: '🦵', muscle: 'Legs', sets: [
+            { weight: '40', reps: '12' }, { weight: '40', reps: '12' }, { weight: '40', reps: '12' }
+          ]
+        },
+        {
+          id: 'calf_raise', name: 'Standing Calf Raise', emoji: '🦶', muscle: 'Legs', sets: [
+            { weight: '100', reps: '15' }, { weight: '100', reps: '15' }, { weight: '100', reps: '15' }, { weight: '100', reps: '15' }
+          ]
+        }
       ]
     },
     {
       name: 'Push (Day 5)',
       exercises: [
-        { id: 'incline_bench', name: 'Incline Bench Press', emoji: '🏋️', muscle: 'Chest', setsCount: 4 },
-        { id: 'db_shoulder_press', name: 'Dumbbell Shoulder Press', emoji: '💪', muscle: 'Shoulders', setsCount: 3 },
-        { id: 'weighted_dips', name: 'Weighted Dips', emoji: '🤸', muscle: 'Chest', setsCount: 3 },
-        { id: 'chest_fly', name: 'Cable Fly', emoji: '🦅', muscle: 'Chest', setsCount: 3 },
-        { id: 'skull_crushers', name: 'Skull Crushers', emoji: '💀', muscle: 'Arms', setsCount: 3 },
-        { id: 'cable_lateral_raise', name: 'Single-Arm Cable Lateral Raise', emoji: '🦅', muscle: 'Shoulders', setsCount: 3 }
+        {
+          id: 'incline_bench', name: 'Incline Bench Press', emoji: '🏋️', muscle: 'Chest', sets: [
+            { weight: '25', reps: '8' }, { weight: '25', reps: '8' }, { weight: '25', reps: '8' }, { weight: '25', reps: '8' }
+          ]
+        },
+        {
+          id: 'db_shoulder_press', name: 'Dumbbell Shoulder Press', emoji: '💪', muscle: 'Shoulders', sets: [
+            { weight: '24', reps: '10' }, { weight: '24', reps: '10' }, { weight: '24', reps: '10' }
+          ]
+        },
+        {
+          id: 'weighted_dips', name: 'Weighted Dips', emoji: '🤸', muscle: 'Chest', sets: [
+            { weight: '25', reps: '10' }, { weight: '25', reps: '10' }, { weight: '25', reps: '10' }
+          ]
+        },
+        {
+          id: 'chest_fly', name: 'Cable Fly', emoji: '🦅', muscle: 'Chest', sets: [
+            { weight: '5.7', reps: '12' }, { weight: '5.7', reps: '12' }, { weight: '5.7', reps: '12' }
+          ]
+        },
+        {
+          id: 'skull_crushers', name: 'Skull Crushers', emoji: '💀', muscle: 'Arms', sets: [
+            { weight: '5', reps: '10' }, { weight: '5', reps: '10' }, { weight: '5', reps: '10' }
+          ]
+        },
+        {
+          id: 'cable_lateral_raise', name: 'Single-Arm Cable Lateral Raise', emoji: '🦅', muscle: 'Shoulders', sets: [
+            { weight: '5.7', reps: '12' }, { weight: '5.7', reps: '12' }, { weight: '5.7', reps: '12' }
+          ]
+        }
       ]
     },
     {
       name: 'Pull (Day 6)',
       exercises: [
-        { id: 'chin_ups', name: 'Chin Ups', emoji: '🤸', muscle: 'Back', setsCount: 4 },
-        { id: 'dumbbell_row', name: 'Dumbbell Row', emoji: '💪', muscle: 'Back', setsCount: 4 },
-        { id: 'lat_pulldown', name: 'Lat Pulldown', emoji: '🔽', muscle: 'Back', setsCount: 3 },
-        { id: 'dumbbell_shrugs', name: 'Dumbbell Shrugs', emoji: '💪', muscle: 'Back', setsCount: 4 },
-        { id: 'incline_db_curl', name: 'Incline Dumbbell Curl', emoji: '💪', muscle: 'Arms', setsCount: 3 },
-        { id: 'reverse_pec_deck', name: 'Reverse Pec Deck', emoji: '🔄', muscle: 'Shoulders', setsCount: 3 }
+        {
+          id: 'chin_ups', name: 'Chin Ups', emoji: '🤸', muscle: 'Back', sets: [
+            { weight: '', reps: '' }, { weight: '', reps: '' }, { weight: '', reps: '' }, { weight: '', reps: '' }
+          ]
+        },
+        {
+          id: 'dumbbell_row', name: 'Dumbbell Row', emoji: '💪', muscle: 'Back', sets: [
+            { weight: '', reps: '10' }, { weight: '', reps: '10' }, { weight: '', reps: '10' }, { weight: '', reps: '10' }
+          ]
+        },
+        {
+          id: 'lat_pulldown', name: 'Lat Pulldown', emoji: '🔽', muscle: 'Back', sets: [
+            { weight: '', reps: '10' }, { weight: '', reps: '10' }, { weight: '', reps: '10' }
+          ]
+        },
+        {
+          id: 'dumbbell_shrugs', name: 'Dumbbell Shrugs', emoji: '💪', muscle: 'Back', sets: [
+            { weight: '', reps: '12' }, { weight: '', reps: '12' }, { weight: '', reps: '12' }, { weight: '', reps: '12' }
+          ]
+        },
+        {
+          id: 'incline_db_curl', name: 'Incline Dumbbell Curl', emoji: '💪', muscle: 'Arms', sets: [
+            { weight: '', reps: '10' }, { weight: '', reps: '10' }, { weight: '', reps: '10' }
+          ]
+        },
+        {
+          id: 'reverse_pec_deck', name: 'Reverse Pec Deck', emoji: '🔄', muscle: 'Shoulders', sets: [
+            { weight: '', reps: '15' }, { weight: '', reps: '15' }, { weight: '', reps: '15' }
+          ]
+        }
       ]
     },
     {
       name: 'Legs (Day 7)',
       exercises: [
-        { id: 'leg_press', name: 'Leg Press', emoji: '🦵', muscle: 'Legs', setsCount: 4 },
-        { id: 'hip_thrust', name: 'Hip Thrust', emoji: '🏋️', muscle: 'Legs', setsCount: 4 },
-        { id: 'walking_lunges', name: 'Walking Lunges', emoji: '🚶', muscle: 'Legs', setsCount: 3 },
-        { id: 'seated_leg_curl', name: 'Seated Leg Curl', emoji: '🦵', muscle: 'Legs', setsCount: 3 },
-        { id: 'goblet_squat', name: 'Goblet Squat', emoji: '🏋️', muscle: 'Legs', setsCount: 3 },
-        { id: 'seated_calf_raise', name: 'Seated Calf Raise', emoji: '🦶', muscle: 'Legs', setsCount: 4 }
+        {
+          id: 'leg_press', name: 'Leg Press', emoji: '🦵', muscle: 'Legs', sets: [
+            { weight: '', reps: '10' }, { weight: '', reps: '10' }, { weight: '', reps: '10' }, { weight: '', reps: '10' }
+          ]
+        },
+        {
+          id: 'hip_thrust', name: 'Hip Thrust', emoji: '🏋️', muscle: 'Legs', sets: [
+            { weight: '', reps: '10' }, { weight: '', reps: '10' }, { weight: '', reps: '10' }, { weight: '', reps: '10' }
+          ]
+        },
+        {
+          id: 'walking_lunges', name: 'Walking Lunges', emoji: '🚶', muscle: 'Legs', sets: [
+            { weight: '', reps: '12' }, { weight: '', reps: '12' }, { weight: '', reps: '12' }
+          ]
+        },
+        {
+          id: 'seated_leg_curl', name: 'Seated Leg Curl', emoji: '🦵', muscle: 'Legs', sets: [
+            { weight: '', reps: '12' }, { weight: '', reps: '12' }, { weight: '', reps: '12' }
+          ]
+        },
+        {
+          id: 'goblet_squat', name: 'Goblet Squat', emoji: '🏋️', muscle: 'Legs', sets: [
+            { weight: '', reps: '15' }, { weight: '', reps: '15' }, { weight: '', reps: '15' }
+          ]
+        },
+        {
+          id: 'seated_calf_raise', name: 'Seated Calf Raise', emoji: '🦶', muscle: 'Legs', sets: [
+            { weight: '', reps: '15' }, { weight: '', reps: '15' }, { weight: '', reps: '15' }, { weight: '', reps: '15' }
+          ]
+        }
       ]
     }
   ];
@@ -434,9 +578,9 @@ const app = (() => {
         name: ex.name,
         emoji: ex.emoji,
         muscle: ex.muscle,
-        sets: Array.from({ length: ex.setsCount || 3 }, () => ({
-          reps: '', weight: '', completed: false
-        }))
+        sets: ex.sets
+          ? ex.sets.map(s => ({ weight: s.weight || '', reps: s.reps || '', completed: false }))
+          : Array.from({ length: ex.setsCount || 3 }, () => ({ reps: '', weight: '', completed: false }))
       }))
     };
     state.workoutStartTime = new Date();
