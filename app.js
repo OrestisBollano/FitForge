@@ -91,61 +91,79 @@ const app = (() => {
     Cardio: '#ec4899'
   };
 
-  // ─── Wger Exercise Images ─────────────────
-  const WGER_BASE = 'https://wger.de';
-  let imageCache = {};
-
-  function loadImageCache() {
-    try {
-      const cached = localStorage.getItem('fitforge_image_cache');
-      if (cached) imageCache = JSON.parse(cached);
-    } catch (e) { }
-  }
-
-  function saveImageCache() {
-    try {
-      localStorage.setItem('fitforge_image_cache', JSON.stringify(imageCache));
-    } catch (e) { }
-  }
-
-  async function fetchExerciseImage(exerciseName) {
-    if (imageCache[exerciseName] !== undefined) return imageCache[exerciseName];
-    try {
-      const resp = await fetch(`${WGER_BASE}/api/v2/exercise/search/?term=${encodeURIComponent(exerciseName)}&language=english&format=json`);
-      if (!resp.ok) throw new Error('API error');
-      const data = await resp.json();
-      const match = data.suggestions.find(s => s.data.image);
-      const imgPath = match ? match.data.image : null;
-      imageCache[exerciseName] = imgPath ? `${WGER_BASE}${imgPath}` : null;
-      saveImageCache();
-      return imageCache[exerciseName];
-    } catch (e) {
-      imageCache[exerciseName] = null;
-      return null;
-    }
-  }
-
-  async function loadAllExerciseImages() {
-    loadImageCache();
-    const uncached = EXERCISE_DB.filter(ex => imageCache[ex.name] === undefined);
-    // Load in small batches to avoid hammering the API
-    for (let i = 0; i < uncached.length; i += 3) {
-      const batch = uncached.slice(i, i + 3);
-      await Promise.all(batch.map(ex => fetchExerciseImage(ex.name)));
-      // Re-render after each batch so images appear progressively
-      if (state.currentView === 'exercises') renderExerciseList();
-    }
-  }
+  // ─── Exercise Image Map (verified from Wger API) ───
+  const WGER_IMG = 'https://wger.de/media/exercise-images';
+  const EXERCISE_IMAGES = {
+    'Bench Press': `${WGER_IMG}/192/Bench-press-1.png`,
+    'Incline Bench Press': `${WGER_IMG}/41/Incline-bench-press-1.png`,
+    'Dumbbell Press': `${WGER_IMG}/97/Dumbbell-bench-press-1.png`,
+    'Incline Dumbbell Press': `${WGER_IMG}/16/Incline-press-1.png`,
+    'Cable Fly': `${WGER_IMG}/122/Incline-cable-flyes-1.png`,
+    'Dumbbell Fly': `${WGER_IMG}/238/2fc242d3-5bdd-4f97-99bd-678adb8c96fc.png`,
+    'Push Ups': `${WGER_IMG}/1551/a6a9e561-3965-45c6-9f2b-ee671e1a3a45.png`,
+    'Dips': `${WGER_IMG}/83/Bench-dips-1.png`,
+    'Weighted Dips': `${WGER_IMG}/83/Bench-dips-1.png`,
+    'Deadlift': `${WGER_IMG}/184/1709c405-620a-4d07-9658-fade2b66a2df.jpeg`,
+    'Barbell Row': `${WGER_IMG}/109/Barbell-rear-delt-row-1.png`,
+    'Pull Ups': `${WGER_IMG}/475/b0554016-16fd-4dbe-be47-a2a17d16ae0e.jpg`,
+    'Chin Ups': `${WGER_IMG}/181/Chin-ups-2.png`,
+    'Dumbbell Shrugs': `${WGER_IMG}/151/Dumbbell-shrugs-2.png`,
+    'Lat Pulldown': `${WGER_IMG}/158/02e8a7c3-dc67-434e-a4bc-77fdecf84b49.webp`,
+    'Seated Cable Row': `${WGER_IMG}/1117/e74255c0-67a0-4309-b78d-2d79e6ff8c11.png`,
+    'Dumbbell Row': `${WGER_IMG}/81/a751a438-ae2d-4751-8d61-cef0e9292174.png`,
+    'T-Bar Row': `${WGER_IMG}/106/T-bar-row-1.png`,
+    'Overhead Press': `${WGER_IMG}/119/seated-barbell-shoulder-press-large-1.png`,
+    'Dumbbell Shoulder Press': `${WGER_IMG}/123/dumbbell-shoulder-press-large-1.png`,
+    'Lateral Raise': `${WGER_IMG}/148/lateral-dumbbell-raises-large-2.png`,
+    'Front Raise': `${WGER_IMG}/256/b7def5bc-2352-499b-b9e5-fff741003831.png`,
+    'Face Pull': `${WGER_IMG}/1639/8927346e-f5ca-4795-bdf1-5ac9309401e7.webp`,
+    'Reverse Fly': `${WGER_IMG}/822/74affc0d-03b6-4f33-b5f4-a822a2615f68.png`,
+    'Single-Arm Cable Lateral Raise': `${WGER_IMG}/1378/7c1fcf34-fb7e-45e7-a0c1-51f296235315.jpg`,
+    'Reverse Pec Deck': `${WGER_IMG}/822/74affc0d-03b6-4f33-b5f4-a822a2615f68.png`,
+    'Barbell Curl': `${WGER_IMG}/74/Bicep-curls-1.png`,
+    'Dumbbell Curl': `${WGER_IMG}/81/Biceps-curl-1.png`,
+    'Hammer Curl': `${WGER_IMG}/138/Hammer-curls-with-rope-1.png`,
+    'Tricep Pushdown': `${WGER_IMG}/659/a60452f1-e2ea-43fe-baa6-c1a2208d060c.png`,
+    'Skull Crushers': `${WGER_IMG}/50/695ced5c-9961-4076-add2-cb250d01089e.png`,
+    'Overhead Tricep Extension': `${WGER_IMG}/1336/ebf88217-df26-4ef7-94cb-f0c2220c6abe.webp`,
+    'Preacher Curl': `${WGER_IMG}/74/Bicep-curls-1.png`,
+    'Incline Dumbbell Curl': `${WGER_IMG}/81/Biceps-curl-1.png`,
+    'Squat': `${WGER_IMG}/1627/86d0b85a-66b7-4e5f-bf8d-bb4d7eb03f59.webp`,
+    'Front Squat': `${WGER_IMG}/191/Front-squat-1-857x1024.png`,
+    'Leg Press': `${WGER_IMG}/371/d2136f96-3a43-4d4c-9944-1919c4ca1ce1.webp`,
+    'Lunges': `${WGER_IMG}/113/Walking-lunges-1.png`,
+    'Walking Lunges': `${WGER_IMG}/113/Walking-lunges-1.png`,
+    'Romanian Deadlift': `${WGER_IMG}/1750/c5ff74e1-b494-4df0-a13f-89c630b88ef9.webp`,
+    'Lying Leg Curl': `${WGER_IMG}/373/60e2aa21-1910-40d3-9fed-babfee06dd48.png`,
+    'Seated Leg Curl': `${WGER_IMG}/373/60e2aa21-1910-40d3-9fed-babfee06dd48.png`,
+    'Leg Extension': `${WGER_IMG}/373/60e2aa21-1910-40d3-9fed-babfee06dd48.png`,
+    'Standing Calf Raise': `${WGER_IMG}/622/9a429bd0-afd3-4ad0-8043-e9beec901c81.jpeg`,
+    'Seated Calf Raise': `${WGER_IMG}/1620/edd40e39-e337-4460-a8dd-6127d40ddd16.jpeg`,
+    'Goblet Squat': `${WGER_IMG}/203/1c052351-2af0-4227-aeb0-244008e4b0a8.jpeg`,
+    'Hip Thrust': `${WGER_IMG}/1614/7f3cfae2-e062-4211-9a6b-5a10851ce7f4.jpg`,
+    'Bulgarian Split Squat': `${WGER_IMG}/988/6283b258-a4d7-4833-84f7-a38987022d3d.png`,
+    'Crunches': `${WGER_IMG}/91/Crunches-1.png`,
+    'Hanging Leg Raise': `${WGER_IMG}/125/Leg-raises-2.png`,
+  };
 
   function getExerciseImageHtml(name, emoji, size = 42) {
-    const url = imageCache[name];
+    const url = EXERCISE_IMAGES[name];
     if (url) {
-      return `<div class="exercise-icon exercise-img-icon" style="width:${size}px;height:${size}px;">
+      return `<div class="exercise-icon exercise-img-icon" style="width:${size}px;height:${size}px;" onclick="event.stopPropagation();app.showImagePreview('${escapeHtml(name).replace(/'/g, "\\'")}')">
         <img src="${url}" alt="${escapeHtml(name)}" class="exercise-img" 
           onerror="this.parentElement.innerHTML='${emoji}'">
       </div>`;
     }
     return `<div class="exercise-icon" style="width:${size}px;height:${size}px;">${emoji}</div>`;
+  }
+
+  function showImagePreview(name) {
+    const url = EXERCISE_IMAGES[name];
+    if (!url) return;
+    const modal = document.getElementById('image-preview-modal');
+    document.getElementById('preview-image').src = url;
+    document.getElementById('preview-title').textContent = name;
+    modal.classList.add('active');
   }
 
   // ─── State ───────────────────────────────
@@ -174,9 +192,6 @@ const app = (() => {
     renderDashboard();
     renderHistory();
     renderProgress();
-
-    // Load exercise images from Wger API (progressive, cached)
-    loadAllExerciseImages();
 
     // Close modals on backdrop click
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
@@ -1546,7 +1561,8 @@ const app = (() => {
     closeModal,
     renameExercise,
     updateExerciseNotes,
-    toggleAutoRestTimer
+    toggleAutoRestTimer,
+    showImagePreview
   };
 
 })();

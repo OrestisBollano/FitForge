@@ -273,6 +273,16 @@
       </div>
     </div>
 
+    <!-- ═══════════ IMAGE PREVIEW MODAL ═══════════ -->
+    <div id="image-preview-modal" class="modal-overlay" onclick="this.classList.remove('active')">
+      <div class="image-preview-content" onclick="event.stopPropagation()">
+        <button class="image-preview-close"
+          onclick="document.getElementById('image-preview-modal').classList.remove('active')">&times;</button>
+        <h3 id="preview-title" class="image-preview-title"></h3>
+        <img id="preview-image" class="image-preview-img" src="" alt="Exercise preview">
+      </div>
+    </div>
+
   </div>
 
   <script src="app.js"></script>
