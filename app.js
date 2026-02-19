@@ -105,6 +105,7 @@ const app = (() => {
     restRemaining: 0,
     selectedMuscle: 'All',
     pickerMuscle: 'All',
+    autoRestTimer: true,
   };
 
   // ─── Init ────────────────────────────────
@@ -791,7 +792,9 @@ const app = (() => {
           <div class="workout-exercise-header">
             <div class="workout-exercise-name">
               <span class="emoji">${ex.emoji}</span>
-              ${escapeHtml(ex.name)}
+              <input type="text" class="exercise-name-input" value="${escapeHtml(ex.name)}"
+                onchange="app.renameExercise(${exIdx}, this.value)"
+                onfocus="this.select()">
               <span class="badge badge-${getMuscleClass(ex.muscle)}" style="margin-left: 4px; font-size: 10px;">${completedSets}/${ex.sets.length}</span>
             </div>
             <div class="workout-exercise-actions">
@@ -800,6 +803,9 @@ const app = (() => {
               </button>
             </div>
           </div>
+          <input type="text" class="exercise-notes-input" placeholder="Notes (e.g. tempo, grip, cues...)"
+            value="${escapeHtml(ex.notes || '')}"
+            onchange="app.updateExerciseNotes(${exIdx}, this.value)">
           <div class="sets-table">
             <div class="sets-header">
               <span>SET</span>
@@ -862,10 +868,35 @@ const app = (() => {
     renderWorkoutExercises();
     saveState();
 
-    // Auto-show rest timer when completing a set
-    if (set.completed) {
+    // Auto-show rest timer when completing a set (if enabled)
+    if (set.completed && state.autoRestTimer) {
       toggleRestTimer();
     }
+  }
+
+  function renameExercise(exIdx, newName) {
+    if (!state.activeWorkout) return;
+    const trimmed = newName.trim();
+    if (trimmed) {
+      state.activeWorkout.exercises[exIdx].name = trimmed;
+      saveState();
+    }
+  }
+
+  function updateExerciseNotes(exIdx, notes) {
+    if (!state.activeWorkout) return;
+    state.activeWorkout.exercises[exIdx].notes = notes;
+    saveState();
+  }
+
+  function toggleAutoRestTimer() {
+    state.autoRestTimer = !state.autoRestTimer;
+    const btn = document.getElementById('auto-rest-toggle');
+    if (btn) {
+      btn.classList.toggle('active', state.autoRestTimer);
+      btn.textContent = state.autoRestTimer ? '⏱ Auto Rest: ON' : '⏱ Auto Rest: OFF';
+    }
+    showToast(state.autoRestTimer ? 'Auto rest timer enabled' : 'Auto rest timer disabled', 'success');
   }
 
   function addSet(exIdx) {
@@ -1456,7 +1487,10 @@ const app = (() => {
     saveTemplate,
     deleteTemplate,
     startFromTemplate,
-    closeModal
+    closeModal,
+    renameExercise,
+    updateExerciseNotes,
+    toggleAutoRestTimer
   };
 
 })();

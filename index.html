@@ -103,12 +103,16 @@
           </div>
         </div>
 
-        <div class="unit-toggle-group">
-          <span class="text-sm text-secondary">Weight unit:</span>
-          <div class="unit-toggle">
-            <div class="unit-option active" data-unit="kg" onclick="app.setUnit('kg')">kg</div>
-            <div class="unit-option" data-unit="lbs" onclick="app.setUnit('lbs')">lbs</div>
+        <div class="workout-controls-row">
+          <div class="unit-toggle-group">
+            <span class="text-sm text-secondary">Weight unit:</span>
+            <div class="unit-toggle">
+              <div class="unit-option active" data-unit="kg" onclick="app.setUnit('kg')">kg</div>
+              <div class="unit-option" data-unit="lbs" onclick="app.setUnit('lbs')">lbs</div>
+            </div>
           </div>
+          <button class="auto-rest-btn active" id="auto-rest-toggle" onclick="app.toggleAutoRestTimer()">⏱ Auto Rest:
+            ON</button>
         </div>
 
         <div id="workout-exercises"></div>

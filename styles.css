@@ -72,7 +72,9 @@
 }
 
 /* --- Reset & Base --- */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -95,11 +97,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: 'Outfit', sans-serif;
 }
 
-input, button, select, textarea {
+input,
+button,
+select,
+textarea {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
@@ -114,13 +122,29 @@ button {
   user-select: none;
 }
 
-ul, ol { list-style: none; }
-a { text-decoration: none; color: inherit; }
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
 
 /* --- Scrollbar --- */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 4px; }
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: 4px;
+}
 
 /* --- App Container --- */
 #app {
@@ -141,11 +165,20 @@ a { text-decoration: none; color: inherit; }
   animation: fadeIn 0.3s var(--ease-out);
 }
 
-.view.active { display: block; }
+.view.active {
+  display: block;
+}
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* --- Bottom Navigation --- */
@@ -641,7 +674,9 @@ select.input {
   scrollbar-width: none;
 }
 
-.muscle-filters::-webkit-scrollbar { display: none; }
+.muscle-filters::-webkit-scrollbar {
+  display: none;
+}
 
 .filter-chip {
   flex-shrink: 0;
@@ -859,6 +894,86 @@ select.input {
   gap: var(--space-sm);
 }
 
+/* Editable exercise name */
+.exercise-name-input {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+  min-width: 0;
+  flex: 1;
+  transition: all var(--transition-fast);
+}
+
+.exercise-name-input:focus {
+  background: var(--bg-input);
+  border-color: var(--accent-blue);
+  outline: none;
+}
+
+/* Exercise notes */
+.exercise-notes-input {
+  width: calc(100% - var(--space-lg) * 2);
+  margin: 0 var(--space-lg) var(--space-sm);
+  padding: 6px 10px;
+  background: var(--bg-input);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-style: italic;
+  transition: all var(--transition-fast);
+}
+
+.exercise-notes-input::placeholder {
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+.exercise-notes-input:focus {
+  border-color: var(--accent-blue);
+  color: var(--text-primary);
+  font-style: normal;
+  outline: none;
+}
+
+/* Workout controls row */
+.workout-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+/* Auto rest toggle button */
+.auto-rest-btn {
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--border-medium);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.auto-rest-btn.active {
+  background: var(--accent-green-soft);
+  color: var(--accent-green);
+  border-color: var(--accent-green);
+}
+
+.auto-rest-btn:active {
+  transform: scale(0.95);
+}
+
 /* Sets table */
 .sets-table {
   padding: 0 var(--space-lg) var(--space-lg);
@@ -891,8 +1006,15 @@ select.input {
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .set-number {
@@ -1378,8 +1500,13 @@ select.input {
 }
 
 @keyframes fadeOverlay {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .modal {
@@ -1394,8 +1521,13 @@ select.input {
 }
 
 @keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
 }
 
 .modal-handle {
@@ -1578,19 +1710,70 @@ select.input {
 }
 
 /* === UTILITY === */
-.flex { display: flex; }
-.flex-center { display: flex; align-items: center; justify-content: center; }
-.flex-between { display: flex; align-items: center; justify-content: space-between; }
-.gap-sm { gap: var(--space-sm); }
-.gap-md { gap: var(--space-md); }
-.gap-lg { gap: var(--space-lg); }
-.mt-sm { margin-top: var(--space-sm); }
-.mt-md { margin-top: var(--space-md); }
-.mt-lg { margin-top: var(--space-lg); }
-.mb-md { margin-bottom: var(--space-md); }
-.mb-lg { margin-bottom: var(--space-lg); }
-.text-center { text-align: center; }
-.text-secondary { color: var(--text-secondary); }
-.text-sm { font-size: 13px; }
-.fw-600 { font-weight: 600; }
-.hidden { display: none !important; }
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gap-sm {
+  gap: var(--space-sm);
+}
+
+.gap-md {
+  gap: var(--space-md);
+}
+
+.gap-lg {
+  gap: var(--space-lg);
+}
+
+.mt-sm {
+  margin-top: var(--space-sm);
+}
+
+.mt-md {
+  margin-top: var(--space-md);
+}
+
+.mt-lg {
+  margin-top: var(--space-lg);
+}
+
+.mb-md {
+  margin-bottom: var(--space-md);
+}
+
+.mb-lg {
+  margin-bottom: var(--space-lg);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-sm {
+  font-size: 13px;
+}
+
+.fw-600 {
+  font-weight: 600;
+}
+
+.hidden {
+  display: none !important;
+}
