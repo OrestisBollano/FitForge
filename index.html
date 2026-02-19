@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#0a0a0f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description"
+    content="Track your workouts, exercises, sets, reps and weights with this mobile-first workout tracker.">
+  <title>FitForge — Workout Tracker</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏋️</text></svg>">
+</head>
+
+<body>
+  <div id="app">
+
+    <!-- ═══════════ TOAST ═══════════ -->
+    <div id="toast" class="toast"></div>
+
+    <!-- ═══════════ DASHBOARD VIEW ═══════════ -->
+    <div id="view-dashboard" class="view active">
+      <div class="dashboard-header">
+        <p class="dashboard-greeting" id="greeting-text">Good morning</p>
+        <h1 class="dashboard-title">FitForge</h1>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-workouts">0</div>
+          <div class="stat-label">Workouts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-week">0</div>
+          <div class="stat-label">This Week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-streak">0</div>
+          <div class="stat-label">Day Streak</div>
+        </div>
+      </div>
+
+      <div class="quick-start-card" onclick="app.startNewWorkout()">
+        <div class="quick-start-info">
+          <h3>Start Workout</h3>
+          <p>Begin an empty workout session</p>
+        </div>
+        <div class="quick-start-icon">
+          <svg viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Templates Section -->
+      <div class="section-header">
+        <span class="section-title">Templates</span>
+        <button class="btn btn-ghost btn-sm" onclick="app.showCreateTemplate()">+ New</button>
+      </div>
+      <div id="templates-list"></div>
+
+      <div class="section-header mt-lg">
+        <span class="section-title">Recent Activity</span>
+      </div>
+      <div id="recent-workouts"></div>
+    </div>
+
+    <!-- ═══════════ EXERCISES VIEW ═══════════ -->
+    <div id="view-exercises" class="view">
+      <div class="exercises-header">
+        <h1 class="exercises-title">Exercises</h1>
+        <div class="search-bar">
+          <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" id="exercise-search" placeholder="Search exercises..." oninput="app.filterExercises()">
+        </div>
+        <div class="muscle-filters" id="muscle-filters"></div>
+      </div>
+      <div id="exercise-list"></div>
+    </div>
+
+    <!-- ═══════════ WORKOUT VIEW ═══════════ -->
+    <div id="view-workout" class="view">
+      <div id="workout-active" class="hidden">
+        <div class="workout-header">
+          <div class="workout-title-section">
+            <span class="workout-label">Active Workout</span>
+            <input type="text" class="workout-name-input" id="workout-name" placeholder="Workout Name" value="">
+          </div>
+          <div class="workout-timer" id="workout-timer" onclick="app.toggleRestTimer()">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <span id="timer-display">00:00</span>
+          </div>
+        </div>
+
+        <div class="unit-toggle-group">
+          <span class="text-sm text-secondary">Weight unit:</span>
+          <div class="unit-toggle">
+            <div class="unit-option active" data-unit="kg" onclick="app.setUnit('kg')">kg</div>
+            <div class="unit-option" data-unit="lbs" onclick="app.setUnit('lbs')">lbs</div>
+          </div>
+        </div>
+
+        <div id="workout-exercises"></div>
+
+        <button class="add-exercise-btn" onclick="app.showExercisePicker()">
+          <svg viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Add Exercise
+        </button>
+
+        <button class="btn btn-danger btn-full" onclick="app.cancelWorkout()" style="margin-bottom: 8px;">Cancel
+          Workout</button>
+        <button class="btn btn-primary btn-full finish-workout-btn" onclick="app.finishWorkout()">
+          ✓ Finish Workout
+        </button>
+      </div>
+
+      <div id="workout-empty">
+        <div class="no-workout">
+          <div class="no-workout-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M6.5 6.5h11v11h-11z" />
+              <path d="M12 3v3m0 12v3M3 12h3m12 0h3" />
+            </svg>
+          </div>
+          <h3>No Active Workout</h3>
+          <p>Start a new workout or pick a template from the dashboard to get going!</p>
+          <button class="btn btn-primary" onclick="app.startNewWorkout()">
+            <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:white;fill:none;stroke-width:2;">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Start Workout
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ HISTORY VIEW ═══════════ -->
+    <div id="view-history" class="view">
+      <div class="history-header">
+        <h1 class="history-title">History</h1>
+        <div class="search-bar">
+          <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" id="history-search" placeholder="Search workouts..." oninput="app.filterHistory()">
+        </div>
+      </div>
+      <div id="history-list"></div>
+    </div>
+
+    <!-- ═══════════ PROGRESS VIEW ═══════════ -->
+    <div id="view-progress" class="view">
+      <div class="progress-header">
+        <h1 class="progress-title">Progress</h1>
+      </div>
+      <div id="progress-content"></div>
+    </div>
+
+    <!-- ═══════════ BOTTOM NAVIGATION ═══════════ -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-view="dashboard" onclick="app.navigate('dashboard')">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+        <span>Home</span>
+      </button>
+      <button class="nav-item" data-view="exercises" onclick="app.navigate('exercises')">
+        <svg viewBox="0 0 24 24">
+          <path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+          <line x1="6" y1="1" x2="6" y2="4" />
+          <line x1="10" y1="1" x2="10" y2="4" />
+          <line x1="14" y1="1" x2="14" y2="4" />
+        </svg>
+        <span>Exercises</span>
+      </button>
+      <button class="nav-item" data-view="workout" onclick="app.navigate('workout')">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="16" />
+          <line x1="8" y1="12" x2="16" y2="12" />
+        </svg>
+        <span>Workout</span>
+      </button>
+      <button class="nav-item" data-view="history" onclick="app.navigate('history')">
+        <svg viewBox="0 0 24 24">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+        </svg>
+        <span>History</span>
+      </button>
+      <button class="nav-item" data-view="progress" onclick="app.navigate('progress')">
+        <svg viewBox="0 0 24 24">
+          <line x1="18" y1="20" x2="18" y2="10" />
+          <line x1="12" y1="20" x2="12" y2="4" />
+          <line x1="6" y1="20" x2="6" y2="14" />
+        </svg>
+        <span>Progress</span>
+      </button>
+    </nav>
+
+    <!-- ═══════════ EXERCISE PICKER MODAL ═══════════ -->
+    <div id="exercise-picker-modal" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-handle"></div>
+        <h2 class="modal-title">Add Exercise</h2>
+        <div class="search-bar mb-lg">
+          <svg viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" id="picker-search" placeholder="Search exercises..." oninput="app.filterPicker()">
+        </div>
+        <div class="muscle-filters mb-lg" id="picker-filters"></div>
+        <div class="exercise-picker-list" id="picker-list"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════ REST TIMER MODAL ═══════════ -->
+    <div id="rest-timer-modal" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-handle"></div>
+        <h2 class="modal-title text-center">Rest Timer</h2>
+        <div class="rest-timer-display">
+          <div class="rest-timer-value" id="rest-timer-value">1:30</div>
+          <div class="rest-timer-buttons">
+            <button class="rest-preset" data-seconds="30" onclick="app.setRestTimer(30)">0:30</button>
+            <button class="rest-preset" data-seconds="60" onclick="app.setRestTimer(60)">1:00</button>
+            <button class="rest-preset active" data-seconds="90" onclick="app.setRestTimer(90)">1:30</button>
+            <button class="rest-preset" data-seconds="120" onclick="app.setRestTimer(120)">2:00</button>
+            <button class="rest-preset" data-seconds="180" onclick="app.setRestTimer(180)">3:00</button>
+          </div>
+        </div>
+        <div class="flex gap-md mt-lg">
+          <button class="btn btn-secondary btn-full" onclick="app.closeRestTimer()">Close</button>
+          <button class="btn btn-primary btn-full" id="rest-start-btn" onclick="app.startRestTimer()">Start</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TEMPLATE MODAL ═══════════ -->
+    <div id="template-modal" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-handle"></div>
+        <h2 class="modal-title">Save as Template</h2>
+        <div class="input-group">
+          <label>Template Name</label>
+          <input type="text" class="input" id="template-name-input" placeholder="e.g. Push Day">
+        </div>
+        <div class="flex gap-md">
+          <button class="btn btn-secondary btn-full" onclick="app.closeModal('template-modal')">Cancel</button>
+          <button class="btn btn-primary btn-full" onclick="app.saveTemplate()">Save</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => { });
+    }
+  </script>
+</body>
+
+</html>

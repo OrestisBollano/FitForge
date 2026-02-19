@@ -1,0 +1,19 @@
+{
+  "name": "FitForge — Workout Tracker",
+  "short_name": "FitForge",
+  "description": "Track your workouts, exercises, sets, reps and weights",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f",
+  "orientation": "portrait",
+  "categories": ["fitness", "health"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='96' fill='%230a0a0f'/><text x='256' y='340' font-size='280' text-anchor='middle'>🏋️</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
