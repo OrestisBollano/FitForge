@@ -15,11 +15,14 @@ const app = (() => {
     { id: 'dumbbell_fly', name: 'Dumbbell Fly', muscle: 'Chest', equipment: 'Dumbbell', emoji: '🦅' },
     { id: 'push_ups', name: 'Push Ups', muscle: 'Chest', equipment: 'Bodyweight', emoji: '🤸' },
     { id: 'dips', name: 'Dips', muscle: 'Chest', equipment: 'Bodyweight', emoji: '🤸' },
+    { id: 'weighted_dips', name: 'Weighted Dips', muscle: 'Chest', equipment: 'Bodyweight', emoji: '🤸' },
 
     // Back
     { id: 'deadlift', name: 'Deadlift', muscle: 'Back', equipment: 'Barbell', emoji: '🏋️' },
     { id: 'barbell_row', name: 'Barbell Row', muscle: 'Back', equipment: 'Barbell', emoji: '🚣' },
     { id: 'pull_ups', name: 'Pull Ups', muscle: 'Back', equipment: 'Bodyweight', emoji: '🤸' },
+    { id: 'chin_ups', name: 'Chin Ups', muscle: 'Back', equipment: 'Bodyweight', emoji: '🤸' },
+    { id: 'dumbbell_shrugs', name: 'Dumbbell Shrugs', muscle: 'Back', equipment: 'Dumbbell', emoji: '💪' },
     { id: 'lat_pulldown', name: 'Lat Pulldown', muscle: 'Back', equipment: 'Cable', emoji: '🔽' },
     { id: 'seated_row', name: 'Seated Cable Row', muscle: 'Back', equipment: 'Cable', emoji: '🚣' },
     { id: 'dumbbell_row', name: 'Dumbbell Row', muscle: 'Back', equipment: 'Dumbbell', emoji: '💪' },
@@ -32,6 +35,8 @@ const app = (() => {
     { id: 'front_raise', name: 'Front Raise', muscle: 'Shoulders', equipment: 'Dumbbell', emoji: '🦅' },
     { id: 'face_pull', name: 'Face Pull', muscle: 'Shoulders', equipment: 'Cable', emoji: '🔄' },
     { id: 'reverse_fly', name: 'Reverse Fly', muscle: 'Shoulders', equipment: 'Dumbbell', emoji: '🦅' },
+    { id: 'cable_lateral_raise', name: 'Single-Arm Cable Lateral Raise', muscle: 'Shoulders', equipment: 'Cable', emoji: '🦅' },
+    { id: 'reverse_pec_deck', name: 'Reverse Pec Deck', muscle: 'Shoulders', equipment: 'Machine', emoji: '🔄' },
 
     // Arms
     { id: 'barbell_curl', name: 'Barbell Curl', muscle: 'Arms', equipment: 'Barbell', emoji: '💪' },
@@ -41,16 +46,21 @@ const app = (() => {
     { id: 'skull_crushers', name: 'Skull Crushers', muscle: 'Arms', equipment: 'Barbell', emoji: '💀' },
     { id: 'overhead_extension', name: 'Overhead Tricep Extension', muscle: 'Arms', equipment: 'Dumbbell', emoji: '💪' },
     { id: 'preacher_curl', name: 'Preacher Curl', muscle: 'Arms', equipment: 'Barbell', emoji: '💪' },
+    { id: 'incline_db_curl', name: 'Incline Dumbbell Curl', muscle: 'Arms', equipment: 'Dumbbell', emoji: '💪' },
 
     // Legs
     { id: 'squat', name: 'Squat', muscle: 'Legs', equipment: 'Barbell', emoji: '🏋️' },
     { id: 'front_squat', name: 'Front Squat', muscle: 'Legs', equipment: 'Barbell', emoji: '🏋️' },
     { id: 'leg_press', name: 'Leg Press', muscle: 'Legs', equipment: 'Machine', emoji: '🦵' },
     { id: 'lunges', name: 'Lunges', muscle: 'Legs', equipment: 'Dumbbell', emoji: '🚶' },
+    { id: 'walking_lunges', name: 'Walking Lunges', muscle: 'Legs', equipment: 'Dumbbell', emoji: '🚶' },
     { id: 'romanian_dl', name: 'Romanian Deadlift', muscle: 'Legs', equipment: 'Barbell', emoji: '🏋️' },
-    { id: 'leg_curl', name: 'Leg Curl', muscle: 'Legs', equipment: 'Machine', emoji: '🦵' },
+    { id: 'leg_curl', name: 'Lying Leg Curl', muscle: 'Legs', equipment: 'Machine', emoji: '🦵' },
+    { id: 'seated_leg_curl', name: 'Seated Leg Curl', muscle: 'Legs', equipment: 'Machine', emoji: '🦵' },
     { id: 'leg_extension', name: 'Leg Extension', muscle: 'Legs', equipment: 'Machine', emoji: '🦵' },
-    { id: 'calf_raise', name: 'Calf Raise', muscle: 'Legs', equipment: 'Machine', emoji: '🦶' },
+    { id: 'calf_raise', name: 'Standing Calf Raise', muscle: 'Legs', equipment: 'Machine', emoji: '🦶' },
+    { id: 'seated_calf_raise', name: 'Seated Calf Raise', muscle: 'Legs', equipment: 'Machine', emoji: '🦶' },
+    { id: 'goblet_squat', name: 'Goblet Squat', muscle: 'Legs', equipment: 'Dumbbell', emoji: '🏋️' },
     { id: 'hip_thrust', name: 'Hip Thrust', muscle: 'Legs', equipment: 'Barbell', emoji: '🏋️' },
     { id: 'bulgarian_split', name: 'Bulgarian Split Squat', muscle: 'Legs', equipment: 'Dumbbell', emoji: '🚶' },
 
@@ -119,6 +129,76 @@ const app = (() => {
   }
 
   // ─── Persistence ─────────────────────────
+  // ─── Default PPL Templates ───────────────
+  const DEFAULT_TEMPLATES = [
+    {
+      name: 'Push (Day 1)',
+      exercises: [
+        { id: 'bench_press', name: 'Bench Press', emoji: '🏋️', muscle: 'Chest', setsCount: 4 },
+        { id: 'ohp', name: 'Overhead Press', emoji: '🏋️', muscle: 'Shoulders', setsCount: 3 },
+        { id: 'incline_db_press', name: 'Incline Dumbbell Press', emoji: '💪', muscle: 'Chest', setsCount: 3 },
+        { id: 'lateral_raise', name: 'Lateral Raise', emoji: '🦅', muscle: 'Shoulders', setsCount: 4 },
+        { id: 'tricep_pushdown', name: 'Tricep Pushdown', emoji: '🔽', muscle: 'Arms', setsCount: 3 },
+        { id: 'overhead_extension', name: 'Overhead Tricep Extension', emoji: '💪', muscle: 'Arms', setsCount: 3 }
+      ]
+    },
+    {
+      name: 'Pull (Day 2)',
+      exercises: [
+        { id: 'pull_ups', name: 'Pull Ups', emoji: '🤸', muscle: 'Back', setsCount: 4 },
+        { id: 'barbell_row', name: 'Barbell Row', emoji: '🚣', muscle: 'Back', setsCount: 4 },
+        { id: 'seated_row', name: 'Seated Cable Row', emoji: '🚣', muscle: 'Back', setsCount: 3 },
+        { id: 'face_pull', name: 'Face Pull', emoji: '🔄', muscle: 'Shoulders', setsCount: 4 },
+        { id: 'barbell_curl', name: 'Barbell Curl', emoji: '💪', muscle: 'Arms', setsCount: 3 },
+        { id: 'hammer_curl', name: 'Hammer Curl', emoji: '🔨', muscle: 'Arms', setsCount: 3 }
+      ]
+    },
+    {
+      name: 'Legs (Day 3)',
+      exercises: [
+        { id: 'squat', name: 'Squat', emoji: '🏋️', muscle: 'Legs', setsCount: 4 },
+        { id: 'romanian_dl', name: 'Romanian Deadlift', emoji: '🏋️', muscle: 'Legs', setsCount: 4 },
+        { id: 'bulgarian_split', name: 'Bulgarian Split Squat', emoji: '🚶', muscle: 'Legs', setsCount: 3 },
+        { id: 'leg_extension', name: 'Leg Extension', emoji: '🦵', muscle: 'Legs', setsCount: 3 },
+        { id: 'leg_curl', name: 'Lying Leg Curl', emoji: '🦵', muscle: 'Legs', setsCount: 3 },
+        { id: 'calf_raise', name: 'Standing Calf Raise', emoji: '🦶', muscle: 'Legs', setsCount: 4 }
+      ]
+    },
+    {
+      name: 'Push (Day 5)',
+      exercises: [
+        { id: 'incline_bench', name: 'Incline Bench Press', emoji: '🏋️', muscle: 'Chest', setsCount: 4 },
+        { id: 'db_shoulder_press', name: 'Dumbbell Shoulder Press', emoji: '💪', muscle: 'Shoulders', setsCount: 3 },
+        { id: 'weighted_dips', name: 'Weighted Dips', emoji: '🤸', muscle: 'Chest', setsCount: 3 },
+        { id: 'chest_fly', name: 'Cable Fly', emoji: '🦅', muscle: 'Chest', setsCount: 3 },
+        { id: 'skull_crushers', name: 'Skull Crushers', emoji: '💀', muscle: 'Arms', setsCount: 3 },
+        { id: 'cable_lateral_raise', name: 'Single-Arm Cable Lateral Raise', emoji: '🦅', muscle: 'Shoulders', setsCount: 3 }
+      ]
+    },
+    {
+      name: 'Pull (Day 6)',
+      exercises: [
+        { id: 'chin_ups', name: 'Chin Ups', emoji: '🤸', muscle: 'Back', setsCount: 4 },
+        { id: 'dumbbell_row', name: 'Dumbbell Row', emoji: '💪', muscle: 'Back', setsCount: 4 },
+        { id: 'lat_pulldown', name: 'Lat Pulldown', emoji: '🔽', muscle: 'Back', setsCount: 3 },
+        { id: 'dumbbell_shrugs', name: 'Dumbbell Shrugs', emoji: '💪', muscle: 'Back', setsCount: 4 },
+        { id: 'incline_db_curl', name: 'Incline Dumbbell Curl', emoji: '💪', muscle: 'Arms', setsCount: 3 },
+        { id: 'reverse_pec_deck', name: 'Reverse Pec Deck', emoji: '🔄', muscle: 'Shoulders', setsCount: 3 }
+      ]
+    },
+    {
+      name: 'Legs (Day 7)',
+      exercises: [
+        { id: 'leg_press', name: 'Leg Press', emoji: '🦵', muscle: 'Legs', setsCount: 4 },
+        { id: 'hip_thrust', name: 'Hip Thrust', emoji: '🏋️', muscle: 'Legs', setsCount: 4 },
+        { id: 'walking_lunges', name: 'Walking Lunges', emoji: '🚶', muscle: 'Legs', setsCount: 3 },
+        { id: 'seated_leg_curl', name: 'Seated Leg Curl', emoji: '🦵', muscle: 'Legs', setsCount: 3 },
+        { id: 'goblet_squat', name: 'Goblet Squat', emoji: '🏋️', muscle: 'Legs', setsCount: 3 },
+        { id: 'seated_calf_raise', name: 'Seated Calf Raise', emoji: '🦶', muscle: 'Legs', setsCount: 4 }
+      ]
+    }
+  ];
+
   function loadState() {
     try {
       const saved = localStorage.getItem('fitforge_data');
@@ -141,6 +221,12 @@ const app = (() => {
           showWorkoutActive(true);
           renderWorkoutExercises();
         }
+      }
+
+      // Load default PPL templates if no templates exist
+      if (state.templates.length === 0) {
+        state.templates = JSON.parse(JSON.stringify(DEFAULT_TEMPLATES));
+        saveState();
       }
     } catch (e) {
       console.error('Failed to load state:', e);
@@ -579,20 +665,20 @@ const app = (() => {
               <span>✓</span>
             </div>
             ${ex.sets.map((set, setIdx) => {
-              // Find previous performance
-              let prevStr = '—';
-              for (let i = state.workouts.length - 1; i >= 0; i--) {
-                const wex = state.workouts[i].exercises.find(e => e.id === ex.id);
-                if (wex && wex.sets[setIdx]) {
-                  const ps = wex.sets[setIdx];
-                  if (ps.weight && ps.reps) {
-                    prevStr = `${ps.weight}×${ps.reps}`;
-                  }
-                  break;
-                }
-              }
+        // Find previous performance
+        let prevStr = '—';
+        for (let i = state.workouts.length - 1; i >= 0; i--) {
+          const wex = state.workouts[i].exercises.find(e => e.id === ex.id);
+          if (wex && wex.sets[setIdx]) {
+            const ps = wex.sets[setIdx];
+            if (ps.weight && ps.reps) {
+              prevStr = `${ps.weight}×${ps.reps}`;
+            }
+            break;
+          }
+        }
 
-              return `
+        return `
               <div class="set-row">
                 <div class="set-number ${set.completed ? 'completed' : ''}">${setIdx + 1}</div>
                 <div style="text-align:center;font-size:12px;color:var(--text-tertiary);">${prevStr}</div>
@@ -609,7 +695,7 @@ const app = (() => {
                   <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
               </div>`;
-            }).join('')}
+      }).join('')}
             <button class="add-set-btn" onclick="app.addSet(${exIdx})">
               <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               Add Set
@@ -846,9 +932,9 @@ const app = (() => {
       <div class="history-date-group">
         <div class="history-date-label">${dateLabel}</div>
         ${wks.map(w => {
-          const totalSets = w.exercises.reduce((sum, ex) => sum + ex.sets.length, 0);
-          const totalVolume = calcVolume(w);
-          return `
+      const totalSets = w.exercises.reduce((sum, ex) => sum + ex.sets.length, 0);
+      const totalVolume = calcVolume(w);
+      return `
           <div class="history-card" onclick="this.classList.toggle('expanded')">
             <div class="history-card-header">
               <span class="history-card-title">${escapeHtml(w.name)}</span>
@@ -883,7 +969,7 @@ const app = (() => {
               </div>
             </div>
           </div>`;
-        }).join('')}
+    }).join('')}
       </div>
     `).join('');
   }
