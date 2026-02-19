@@ -91,6 +91,63 @@ const app = (() => {
     Cardio: '#ec4899'
   };
 
+  // ─── Wger Exercise Images ─────────────────
+  const WGER_BASE = 'https://wger.de';
+  let imageCache = {};
+
+  function loadImageCache() {
+    try {
+      const cached = localStorage.getItem('fitforge_image_cache');
+      if (cached) imageCache = JSON.parse(cached);
+    } catch (e) { }
+  }
+
+  function saveImageCache() {
+    try {
+      localStorage.setItem('fitforge_image_cache', JSON.stringify(imageCache));
+    } catch (e) { }
+  }
+
+  async function fetchExerciseImage(exerciseName) {
+    if (imageCache[exerciseName] !== undefined) return imageCache[exerciseName];
+    try {
+      const resp = await fetch(`${WGER_BASE}/api/v2/exercise/search/?term=${encodeURIComponent(exerciseName)}&language=english&format=json`);
+      if (!resp.ok) throw new Error('API error');
+      const data = await resp.json();
+      const match = data.suggestions.find(s => s.data.image);
+      const imgPath = match ? match.data.image : null;
+      imageCache[exerciseName] = imgPath ? `${WGER_BASE}${imgPath}` : null;
+      saveImageCache();
+      return imageCache[exerciseName];
+    } catch (e) {
+      imageCache[exerciseName] = null;
+      return null;
+    }
+  }
+
+  async function loadAllExerciseImages() {
+    loadImageCache();
+    const uncached = EXERCISE_DB.filter(ex => imageCache[ex.name] === undefined);
+    // Load in small batches to avoid hammering the API
+    for (let i = 0; i < uncached.length; i += 3) {
+      const batch = uncached.slice(i, i + 3);
+      await Promise.all(batch.map(ex => fetchExerciseImage(ex.name)));
+      // Re-render after each batch so images appear progressively
+      if (state.currentView === 'exercises') renderExerciseList();
+    }
+  }
+
+  function getExerciseImageHtml(name, emoji, size = 42) {
+    const url = imageCache[name];
+    if (url) {
+      return `<div class="exercise-icon exercise-img-icon" style="width:${size}px;height:${size}px;">
+        <img src="${url}" alt="${escapeHtml(name)}" class="exercise-img" 
+          onerror="this.parentElement.innerHTML='${emoji}'">
+      </div>`;
+    }
+    return `<div class="exercise-icon" style="width:${size}px;height:${size}px;">${emoji}</div>`;
+  }
+
   // ─── State ───────────────────────────────
   let state = {
     currentView: 'dashboard',
@@ -117,6 +174,9 @@ const app = (() => {
     renderDashboard();
     renderHistory();
     renderProgress();
+
+    // Load exercise images from Wger API (progressive, cached)
+    loadAllExerciseImages();
 
     // Close modals on backdrop click
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
@@ -637,9 +697,7 @@ const app = (() => {
 
     container.innerHTML = filtered.map(ex => `
       <div class="exercise-list-item" onclick="app.showExerciseDetail('${ex.id}')">
-        <div class="exercise-icon" style="background: ${MUSCLE_COLORS[ex.muscle]}22;">
-          ${ex.emoji}
-        </div>
+        ${getExerciseImageHtml(ex.name, ex.emoji)}
         <div class="exercise-info">
           <div class="exercise-name">${ex.name}</div>
           <div class="exercise-meta">${ex.muscle} · ${ex.equipment}</div>
@@ -703,9 +761,7 @@ const app = (() => {
 
     container.innerHTML = filtered.map(ex => `
       <div class="exercise-picker-item" onclick="app.addExerciseToWorkout('${ex.id}')">
-        <div class="exercise-icon" style="background: ${MUSCLE_COLORS[ex.muscle]}22;">
-          ${ex.emoji}
-        </div>
+        ${getExerciseImageHtml(ex.name, ex.emoji, 36)}
         <div class="exercise-info">
           <div class="exercise-name">${ex.name}</div>
           <div class="exercise-meta">${ex.muscle} · ${ex.equipment}</div>
@@ -791,7 +847,7 @@ const app = (() => {
         <div class="workout-exercise">
           <div class="workout-exercise-header">
             <div class="workout-exercise-name">
-              <span class="emoji">${ex.emoji}</span>
+              ${getExerciseImageHtml(ex.name, ex.emoji, 32)}
               <input type="text" class="exercise-name-input" value="${escapeHtml(ex.name)}"
                 onchange="app.renameExercise(${exIdx}, this.value)"
                 onfocus="this.select()">
