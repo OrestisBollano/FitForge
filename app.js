@@ -623,7 +623,7 @@ const app = (() => {
     }
 
     container.innerHTML = state.templates.map((t, i) => `
-      <div class="template-card" onclick="app.startFromTemplate(${i})">
+      <div class="template-card" onclick="app.showTemplatePreview(${i})">
         <div class="flex-between">
           <div>
             <div class="template-name">${escapeHtml(t.name)}</div>
@@ -673,6 +673,43 @@ const app = (() => {
       renderTemplates();
       showToast('Template deleted', 'success');
     }
+  }
+
+  function showTemplatePreview(index) {
+    const template = state.templates[index];
+    if (!template) return;
+
+    document.getElementById('template-preview-title').textContent = template.name;
+
+    const content = document.getElementById('template-preview-content');
+    content.innerHTML = template.exercises.map(ex => {
+      const setsInfo = ex.sets
+        ? ex.sets.map((s, i) => `<div class="tp-set-row"><span class="tp-set-num">${i + 1}</span><span>${s.weight || '—'} ${state.unit} × ${s.reps || '—'}</span></div>`).join('')
+        : `<div class="tp-set-row"><span class="text-secondary">${ex.setsCount || 3} sets</span></div>`;
+
+      return `
+        <div class="tp-exercise">
+          <div class="tp-exercise-header">
+            ${getExerciseImageHtml(ex.name, ex.emoji, 36)}
+            <div class="tp-exercise-info">
+              <div class="tp-exercise-name">${escapeHtml(ex.name)}</div>
+              <span class="badge badge-${getMuscleClass(ex.muscle)}">${ex.muscle}</span>
+            </div>
+          </div>
+          <div class="tp-sets">
+            <div class="tp-set-row tp-set-header"><span>SET</span><span>WEIGHT × REPS</span></div>
+            ${setsInfo}
+          </div>
+        </div>`;
+    }).join('');
+
+    const startBtn = document.getElementById('template-preview-start-btn');
+    startBtn.onclick = () => {
+      closeModal('template-preview-modal');
+      startFromTemplate(index);
+    };
+
+    document.getElementById('template-preview-modal').classList.add('active');
   }
 
   function startFromTemplate(index) {
@@ -1597,7 +1634,8 @@ const app = (() => {
     renameExercise,
     updateExerciseNotes,
     toggleAutoRestTimer,
-    showImagePreview
+    showImagePreview,
+    showTemplatePreview
   };
 
 })();

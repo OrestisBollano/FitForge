@@ -1,5 +1,5 @@
 // FitForge Service Worker — Offline Caching
-const CACHE_NAME = 'fitforge-v3';
+const CACHE_NAME = 'fitforge-v4';
 const ASSETS = [
     './',
     './index.html',

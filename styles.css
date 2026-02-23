@@ -1845,3 +1845,93 @@ select.input {
 .hidden {
   display: none !important;
 }
+
+/* === TEMPLATE PREVIEW MODAL === */
+.template-preview-modal {
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.template-preview-content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: var(--space-lg);
+  padding-right: var(--space-xs);
+}
+
+.template-preview-actions {
+  display: flex;
+  gap: var(--space-md);
+  flex-shrink: 0;
+}
+
+.tp-exercise {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+.tp-exercise-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.tp-exercise-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tp-exercise-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.tp-sets {
+  padding-top: var(--space-sm);
+}
+
+.tp-set-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  font-size: 13px;
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+}
+
+.tp-set-row:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.tp-set-header {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 8px;
+  margin-bottom: 2px;
+}
+
+.tp-set-num {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--bg-input);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
