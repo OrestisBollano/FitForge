@@ -442,6 +442,27 @@ const app = (() => {
           renderWorkoutExercises();
         }
 
+        // Restore auto-rest settings
+        if (typeof data.autoRestTimer === 'boolean') {
+          state.autoRestTimer = data.autoRestTimer;
+        }
+        if (data.restSeconds) {
+          state.restSeconds = data.restSeconds;
+          state.restRemaining = data.restSeconds;
+        }
+
+        // Sync auto-rest button UI
+        const autoRestBtn = document.getElementById('auto-rest-toggle');
+        if (autoRestBtn) {
+          autoRestBtn.classList.toggle('active', state.autoRestTimer);
+          autoRestBtn.textContent = state.autoRestTimer ? '⏱ Auto Rest: ON' : '⏱ Auto Rest: OFF';
+        }
+
+        // Sync rest preset buttons
+        document.querySelectorAll('.rest-preset').forEach(btn => {
+          btn.classList.toggle('active', parseInt(btn.dataset.seconds) === state.restSeconds);
+        });
+
         // Restore the last viewed page
         if (data.currentView) {
           navigate(data.currentView);
@@ -466,7 +487,9 @@ const app = (() => {
         unit: state.unit,
         activeWorkout: state.activeWorkout,
         workoutStartTime: state.workoutStartTime,
-        currentView: state.currentView
+        currentView: state.currentView,
+        autoRestTimer: state.autoRestTimer,
+        restSeconds: state.restSeconds
       }));
     } catch (e) {
       console.error('Failed to save state:', e);
@@ -946,9 +969,10 @@ const app = (() => {
     renderWorkoutExercises();
     saveState();
 
-    // Auto-show rest timer when completing a set (if enabled)
+    // Auto-start rest timer when completing a set (if enabled)
     if (set.completed && state.autoRestTimer) {
       toggleRestTimer();
+      startRestTimer();
     }
   }
 
@@ -974,6 +998,7 @@ const app = (() => {
       btn.classList.toggle('active', state.autoRestTimer);
       btn.textContent = state.autoRestTimer ? '⏱ Auto Rest: ON' : '⏱ Auto Rest: OFF';
     }
+    saveState();
     showToast(state.autoRestTimer ? 'Auto rest timer enabled' : 'Auto rest timer disabled', 'success');
   }
 
@@ -1040,6 +1065,8 @@ const app = (() => {
     stopTimer();
     showWorkoutActive(false);
     saveState();
+    renderHistory();
+    renderProgress();
     navigate('dashboard');
     showToast('Workout saved! 🎉', 'success');
   }
@@ -1092,6 +1119,7 @@ const app = (() => {
     document.querySelectorAll('.rest-preset').forEach(btn => {
       btn.classList.toggle('active', parseInt(btn.dataset.seconds) === seconds);
     });
+    saveState();
   }
 
   function startRestTimer() {
