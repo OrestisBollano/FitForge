@@ -68,6 +68,7 @@
 
   /* Layout */
   --nav-height: 64px;
+  --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
@@ -159,7 +160,7 @@ a {
 /* --- Page Views --- */
 .view {
   display: none;
-  padding: var(--space-lg) var(--space-lg) calc(var(--nav-height) + var(--safe-bottom) + 24px);
+  padding: calc(var(--safe-top) + var(--space-lg)) var(--space-lg) calc(var(--nav-height) + var(--safe-bottom) + 24px);
   min-height: 100vh;
   min-height: 100dvh;
   animation: fadeIn 0.3s var(--ease-out);

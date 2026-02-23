@@ -1,11 +1,14 @@
 // FitForge Service Worker — Offline Caching
-const CACHE_NAME = 'fitforge-v1';
+const CACHE_NAME = 'fitforge-v2';
 const ASSETS = [
     './',
     './index.html',
     './styles.css',
     './app.js',
-    './manifest.json'
+    './manifest.json',
+    './icons/icon-192.png',
+    './icons/icon-512.png',
+    './icons/apple-touch-icon.png'
 ];
 
 // Install: cache core assets
